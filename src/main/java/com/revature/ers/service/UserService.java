@@ -21,4 +21,14 @@ public class UserService {
 		}	
 		return ersUser;
 	}
+
+	public int create(ErsUser ersUser) throws BusinessException {
+		if(ersUser==null) {
+			throw new BusinessException("Sorry! Sever can't get data from client");
+		} else {
+			int c = userDAO.createAccount(ersUser);
+			return c;
+		}
+		
+	}
 }

@@ -23,10 +23,13 @@ public class UserServlet extends HttpServlet {
 		System.out.println("Get URI= " + URI);
 		switch (URI) {
 			case "login":
-				System.out.println("Get URI= " + URI);
 				uc.login(req, resp);
 				break;
+			case "create":
+				uc.create(req,resp);
+				break;
 			}
+			
 	}
 
 	@Override

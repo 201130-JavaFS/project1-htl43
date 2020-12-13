@@ -39,24 +39,62 @@ public class UserController {
 			try {
 				ErsUser ersUser = us.login(lDTO.username, lDTO.password);
 				ersUser.setPassword("");
-				System.out.println(ersUser.toString());
 				String json = om.writeValueAsString(ersUser);
 				resp.getWriter().print(json);
 				resp.setStatus(200);		
 				HttpSession ses = req.getSession();	
 				ses.setAttribute("user", lDTO);
 				ses.setAttribute("loggedin", true);
+				log.info("<Login Succesfull!>");
+				log.info(ersUser.toString());
 			} catch (BusinessException e) {
-				log.warn(e.getMessage());
 				HttpSession ses = req.getSession(false);
 				if (ses != null) {
 					ses.invalidate();
 				}
 				resp.setStatus(401);
 				resp.getWriter().print(e.getMessage());
+				log.warn("<Login Failed!>");
+				log.warn(e.getMessage());
 			}	
 		}
 		
+	}
+
+	public void create(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+		if(req.getMethod().equals("POST")) {		
+			BufferedReader reader = req.getReader();
+			StringBuilder sb = new StringBuilder();
+			String line = reader.readLine();
+			
+			while (line!=null) {
+				sb.append(line);
+				line = reader.readLine();
+			}
+			
+			String body = new String(sb);
+			ErsUser ersUser = om.readValue(body, ErsUser.class);
+			try {
+				int c = us.create(ersUser);
+				if(c > 0) {
+					resp.setStatus(200);
+					resp.getWriter().print("Account has been created successfully");
+					log.info("<Create Account Successfully!>");
+					log.info(ersUser);
+				} else {
+					resp.setStatus(409);
+					resp.getWriter().print("Sorry! System can't create account at this time. Please check if your "
+							+ "account is already existed or contact customer service");
+					log.info("<Create Account Failed!>");
+					log.info("System can't create account at this time");
+				}				
+			} catch (BusinessException e) {
+				resp.setStatus(406);
+				resp.getWriter().print(e.getMessage());
+				log.warn("<Create Account Failed!>");
+				log.warn(e.getMessage());
+			}	
+		}
 	}
 
 }

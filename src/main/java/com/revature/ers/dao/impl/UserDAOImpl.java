@@ -64,7 +64,28 @@ public class UserDAOImpl implements UserDAO {
 			}
 		} catch (ClassNotFoundException | SQLException e) {
 			log.warn(e.getMessage());
-			throw new BusinessException("Internal error occured.. Kindly contact SYSADMIN");
+			throw new BusinessException("Internal error occured. Please contact customer "
+					+ "service for more imformation");
+		}
+	}
+
+	@Override
+	public int createAccount(ErsUser ersUser) throws BusinessException {
+		try (Connection connection = PostresSqlConnection.getConnection()) {
+			String sql = UserDAOImpQueries.CREATE_ERS_USER;
+			PreparedStatement preparedStatement = connection.prepareStatement(sql);
+			preparedStatement.setString(1, ersUser.getUsername());
+			preparedStatement.setString(2, ersUser.getPassword());
+			preparedStatement.setString(3, ersUser.getFirstname());
+			preparedStatement.setString(4, ersUser.getLastname());
+			preparedStatement.setString(5, ersUser.getEmail());
+			preparedStatement.setInt(6, ersUser.getRole().getUserRoleId());
+			int c = preparedStatement.executeUpdate();
+			return c;
+		} catch (ClassNotFoundException | SQLException e) {
+			log.warn(e.getMessage());
+			throw new BusinessException("Internal error occured. Please contact customer "
+					+ "service for more imformation");
 		}
 	}
 
