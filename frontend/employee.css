@@ -6,6 +6,7 @@
   border: 1px solid #e2e9e6;
 }
 
-#welcome-header {
+h3,
+h5 {
   color: #ff6000;
 }
