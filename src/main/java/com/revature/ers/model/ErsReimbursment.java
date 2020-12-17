@@ -3,7 +3,7 @@ package com.revature.ers.model;
 import java.sql.Date;
 import java.util.Arrays;
 
-public class ErsReimbursement {
+public class ErsReimbursment {
 	private int reimbId;
 	private double amount;
 	private Date submitted;
@@ -12,16 +12,16 @@ public class ErsReimbursement {
 	private byte[] receipt;
 	private int author;
 	private int resolver;
-	ErsRedimbursementStatus status;
+	ErsReimbursmentStatus status;
 	ErsReimbursmentType type;
 	
-	public ErsReimbursement() {
+	public ErsReimbursment() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
 
-	public ErsReimbursement(int reimbId, double amount, Date submitted, Date resolved, String description,
-			byte[] receipt, int author, int resolver, ErsRedimbursementStatus status, ErsReimbursmentType type) {
+	public ErsReimbursment(int reimbId, double amount, Date submitted, Date resolved, String description,
+			byte[] receipt, int author, int resolver, ErsReimbursmentStatus status, ErsReimbursmentType type) {
 		super();
 		this.reimbId = reimbId;
 		this.amount = amount;
@@ -35,8 +35,8 @@ public class ErsReimbursement {
 		this.type = type;
 	}
 
-	public ErsReimbursement(double amount, Date submitted, Date resolved, String description, byte[] receipt,
-			int author, int resolver, ErsRedimbursementStatus status, ErsReimbursmentType type) {
+	public ErsReimbursment(double amount, Date submitted, Date resolved, String description, byte[] receipt,
+			int author, int resolver, ErsReimbursmentStatus status, ErsReimbursmentType type) {
 		super();
 		this.amount = amount;
 		this.submitted = submitted;
@@ -113,11 +113,11 @@ public class ErsReimbursement {
 		this.resolver = resolver;
 	}
 
-	public ErsRedimbursementStatus getStatus() {
+	public ErsReimbursmentStatus getStatus() {
 		return status;
 	}
 
-	public void setStatus(ErsRedimbursementStatus status) {
+	public void setStatus(ErsReimbursmentStatus status) {
 		this.status = status;
 	}
 
@@ -156,7 +156,7 @@ public class ErsReimbursement {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		ErsReimbursement other = (ErsReimbursement) obj;
+		ErsReimbursment other = (ErsReimbursment) obj;
 		if (Double.doubleToLongBits(amount) != Double.doubleToLongBits(other.amount))
 			return false;
 		if (author != other.author)

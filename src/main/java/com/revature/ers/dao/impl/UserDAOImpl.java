@@ -19,13 +19,14 @@ public class UserDAOImpl implements UserDAO {
 	@Override
 	public ErsUser loginAccount(String username, String password) throws BusinessException {
 		try (Connection connection = PostresSqlConnection.getConnection()) {
+			ErsUser ersUser=null;
 			String sql = UserDAOImpQueries.GET_ERS_USER;
 			PreparedStatement preparedStatement = connection.prepareStatement(sql);
 			preparedStatement.setString(1, username);
 			preparedStatement.setString(2, password);
 			ResultSet resultSet = preparedStatement.executeQuery();
 			if (resultSet.next()) {
-				ErsUser ersUser = new ErsUser(
+				ersUser = new ErsUser(
 						resultSet.getInt("ers_users_id"), 
 						resultSet.getString("ers_username"), 
 						resultSet.getString("ers_password"), 
@@ -37,41 +38,20 @@ public class UserDAOImpl implements UserDAO {
 						resultSet.getInt("ers_user_role_id"), 
 						resultSet.getString("user_role"));
 				ersUser.setRole(ersUserRole);
-				return ersUser;
-			}else {
-				throw new BusinessException("Login failed. System can't find any record with your username"
-						+ " and password");
+				
 			}
+			return ersUser;
 		} catch (ClassNotFoundException | SQLException e) {
 			log.warn(e.getMessage());
 			throw new BusinessException("Internal error occured.. Kindly contact SYSADMIN");
 		}
 	}
 
-	@Override
-	public ErsUserRole getUserRoleById(int userRoleId) throws BusinessException {
-		try (Connection connection = PostresSqlConnection.getConnection()) {
-			String sql = UserDAOImpQueries.GET_ERS_USER_ROLE_BY_ID;
-			PreparedStatement preparedStatement = connection.prepareStatement(sql);
-			preparedStatement.setInt(1, userRoleId);
-			ResultSet resultSet = preparedStatement.executeQuery();
-			if (resultSet.next()) {
-				ErsUserRole ersUserRole;
-				ersUserRole = new ErsUserRole(resultSet.getInt("ers_user_role_id"), resultSet.getString("user_role"));
-				return ersUserRole;
-			}else {
-				throw new BusinessException("Sorry. System can't find any record that matchs with user role id= " +userRoleId);
-			}
-		} catch (ClassNotFoundException | SQLException e) {
-			log.warn(e.getMessage());
-			throw new BusinessException("Internal error occured. Please contact customer "
-					+ "service for more imformation");
-		}
-	}
 
 	@Override
 	public int createAccount(ErsUser ersUser) throws BusinessException {
 		try (Connection connection = PostresSqlConnection.getConnection()) {
+			int c = 0;
 			String sql = UserDAOImpQueries.CREATE_ERS_USER;
 			PreparedStatement preparedStatement = connection.prepareStatement(sql);
 			preparedStatement.setString(1, ersUser.getUsername());
@@ -80,7 +60,7 @@ public class UserDAOImpl implements UserDAO {
 			preparedStatement.setString(4, ersUser.getLastname());
 			preparedStatement.setString(5, ersUser.getEmail());
 			preparedStatement.setInt(6, ersUser.getRole().getUserRoleId());
-			int c = preparedStatement.executeUpdate();
+			c = preparedStatement.executeUpdate();
 			return c;
 		} catch (ClassNotFoundException | SQLException e) {
 			log.warn(e.getMessage());

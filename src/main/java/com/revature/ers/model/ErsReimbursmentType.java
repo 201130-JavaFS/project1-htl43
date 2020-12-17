@@ -10,7 +10,19 @@ public class ErsReimbursmentType {
 		this.typeId = typeId;
 		this.type = type;
 	}
-	
+		
+	public ErsReimbursmentType() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+
+	public ErsReimbursmentType(int typeId) {
+		super();
+		this.typeId = typeId;
+	}
+
+
+
 	public int getTypeId() {
 		return typeId;
 	}

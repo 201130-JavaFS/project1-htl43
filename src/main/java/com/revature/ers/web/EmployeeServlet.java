@@ -9,37 +9,34 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
 
-import com.revature.ers.controllers.UserController;
+import com.revature.ers.controllers.EmployeeController;
 
-import sun.misc.UCDecoder;
+public class EmployeeServlet extends HttpServlet {
 
-public class UserServlet extends HttpServlet {
-	
 	private static Logger log=Logger.getLogger(UserServlet.class);
-	private UserController uc = new UserController();
+	private EmployeeController ec = new EmployeeController();
 	
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		resp.setContentType("application/json");
 		resp.setStatus(404);
-		final String URI = req.getRequestURI().replace("/project-1/", "");
+		final String URI = req.getRequestURI().replace("/project-1/emp/", "");
 		
 		switch (URI) {
-			case "login":
-				uc.login(req, resp);
-				break;
-			case "create":
-				uc.create(req,resp);
+			case "submit":
+				if(req.getSession(false)!=null) {
+					ec.submitReimbursement(req, resp);
+				} else {
+					resp.setStatus(403);
+				}				
 				break;
 			}
-			
 	}
 
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		doGet(req, resp);
 	}
-	
-	
 
+		
 }

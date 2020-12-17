@@ -1,21 +1,26 @@
 package com.revature.ers.model;
 
-public class ErsRedimbursementStatus {
+public class ErsReimbursmentStatus {
 	
 	private int statusId;
 	private String status;
 	
-	public ErsRedimbursementStatus() {
+	public ErsReimbursmentStatus() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
 	
-	public ErsRedimbursementStatus(int statusId, String status) {
+	public ErsReimbursmentStatus(int statusId, String status) {
 		super();
 		this.statusId = statusId;
 		this.status = status;
 	}
 	
+	public ErsReimbursmentStatus(int statusId) {
+		super();
+		this.statusId = statusId;
+	}
+
 	public int getStatusId() {
 		return statusId;
 	}
@@ -49,7 +54,7 @@ public class ErsRedimbursementStatus {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		ErsRedimbursementStatus other = (ErsRedimbursementStatus) obj;
+		ErsReimbursmentStatus other = (ErsReimbursmentStatus) obj;
 		if (status == null) {
 			if (other.status != null)
 				return false;

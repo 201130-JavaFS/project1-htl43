@@ -19,6 +19,7 @@ import com.revature.ers.service.UserService;
 public class UserController {
 	
 	private static Logger log=Logger.getLogger(UserController.class);
+	
 	private ObjectMapper om = new ObjectMapper();
 	private UserService us = new UserService();
 
@@ -36,9 +37,10 @@ public class UserController {
 			
 			String body = new String(sb);
 			LoginDTO lDTO = om.readValue(body, LoginDTO.class);
+			
 			try {
 				ErsUser ersUser = us.login(lDTO.username, lDTO.password);
-				ersUser.setPassword("");
+				ersUser.setPassword(""); // send empty password to frontend
 				String json = om.writeValueAsString(ersUser);
 				resp.getWriter().print(json);
 				resp.setStatus(200);		
@@ -57,6 +59,14 @@ public class UserController {
 				log.warn("<Login Failed!>");
 				log.warn(e.getMessage());
 			}	
+		} else {
+			HttpSession ses = req.getSession(false);
+			if (ses != null) {
+				ses.invalidate();
+			}
+			resp.setStatus(400);
+			log.warn("<Login Failed!>");
+			log.warn("Bad Requested");
 		}
 		
 	}
@@ -74,26 +84,31 @@ public class UserController {
 			
 			String body = new String(sb);
 			ErsUser ersUser = om.readValue(body, ErsUser.class);
+			ersUser.setPassword(us.encryptPassword(ersUser.getPassword()));
 			try {
-				int c = us.create(ersUser);
-				if(c > 0) {
-					resp.setStatus(200);
-					resp.getWriter().print("Account has been created successfully");
-					log.info("<Create Account Successfully!>");
-					log.info(ersUser);
-				} else {
-					resp.setStatus(409);
-					resp.getWriter().print("Sorry! System can't create account at this time. Please check if your "
-							+ "account is already existed or contact customer service");
-					log.info("<Create Account Failed!>");
-					log.info("System can't create account at this time");
-				}				
+				us.create(ersUser);		
+				resp.setStatus(200);
+				resp.getWriter().print("Account has been created successfully");
+				log.info("<Create Account Successfully!>");
+				log.info(ersUser);			
 			} catch (BusinessException e) {
-				resp.setStatus(406);
+				HttpSession ses = req.getSession(false);
+				if (ses != null) {
+					ses.invalidate();
+				}
+				resp.setStatus(500);
 				resp.getWriter().print(e.getMessage());
 				log.warn("<Create Account Failed!>");
 				log.warn(e.getMessage());
 			}	
+		} else {
+			HttpSession ses = req.getSession(false);
+			if (ses != null) {
+				ses.invalidate();
+			}
+			resp.setStatus(400);
+			log.warn("<Created Account Failed!>");
+			log.warn("Bad Requested");
 		}
 	}
 
