@@ -8,4 +8,5 @@ public interface UserDAO {
 	
 	public ErsUser loginAccount(String username, String password) throws BusinessException;
 	public int createAccount(ErsUser ersUser) throws BusinessException;
+	public ErsUser getUserById(int id) throws BusinessException;
 }

@@ -2,6 +2,7 @@ package com.revature.ers.web;
 
 import java.io.IOException;
 
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -22,7 +23,7 @@ public class UserServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		resp.setContentType("application/json");
 		resp.setStatus(404);
-		final String URI = req.getRequestURI().replace("/project-1/", "");
+		final String URI = req.getRequestURI().replace("/project-1/user/", "");
 		
 		switch (URI) {
 			case "login":

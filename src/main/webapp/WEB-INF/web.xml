@@ -23,7 +23,7 @@
   
   <servlet-mapping>
   	<servlet-name>UserServlet</servlet-name>
-  	<url-pattern>/*</url-pattern>
+  	<url-pattern>/user/*</url-pattern>
   </servlet-mapping>
   
   <servlet>
@@ -36,5 +36,15 @@
   	<servlet-name>EmployeeServlet</servlet-name>
   	<url-pattern>/emp/*</url-pattern>
   </servlet-mapping>
+
+  <servlet>
+  	<display-name>ManagerServlet</display-name>
+  	<servlet-name>ManagerServlet</servlet-name>
+  	<servlet-class>com.revature.ers.web.ManagerServlet</servlet-class>
+  </servlet>
   
+  <servlet-mapping>
+  	<servlet-name>ManagerServlet</servlet-name>
+  	<url-pattern>/man/*</url-pattern>
+  </servlet-mapping>
 </web-app>

@@ -1,5 +1,5 @@
 const url = 'http://localhost:8080/project-1/';
-document.getElementById("user-body").onload = function() {loadData()};
+document.getElementById("emp-body").onload = function() {loadData()};
 var user;
 
 function loadData() {
@@ -30,15 +30,9 @@ function loadData() {
         role.innerHTML = user.role.userRole;
         row.appendChild(role);
 
-        document.getElementById("avbody").appendChild(row);
+        document.getElementById("emp-table-info-body").appendChild(row);
     }
-    if(user.role.userRoleId === 1) {
-       document.getElementById("employee-div1").hidden = false;
-       
-    } else {
-        document.getElementById("manager-div1").hidden = false;
-        
-    }
+
 }
 
 document.getElementById("logout").addEventListener("click", function() {
@@ -52,27 +46,46 @@ document.getElementById("logout").addEventListener("click", function() {
 var select = document.getElementById("emp-select");
 var intSelect = select.value;
 var menu = document.getElementById("menu");
-var reqForm = document.getElementById('request-form');
+var reqForm = document.getElementById("request-form");
+var viewRibs = document.getElementById("view-reimbs");
+let amountHelper = document.getElementById("amountHelp");
 
 select.addEventListener("change", menuSelect);
 
 
 function menuSelect() {
-    console.log("IntSelect= " + intSelect);
     let newSelect = select.value;   
     if(newSelect!=intSelect) {
-        console.log("NewSelect= " + newSelect);
         if(newSelect=='request') {
             reqForm.hidden = false;
-            menu.hidden = true;               
+            menu.hidden = true;
+            viewRibs.hidden = true;
+            amountHelper.innerHTML = "The amount of reimbursment must be a number that greater than 0";
+            amountHelper.style.color = "black";               
         } else if(newSelect=='menu') {
-            select.value = "menu";
-            menu.hidden = false;
+            // select.value = "menu";
             reqForm.hidden = true;
+            menu.hidden = false;
+            viewRibs.hidden = true;
+        } else {
+            reqForm.hidden = true;
+            menu.hidden = true;
+            viewRibs.hidden = false;
+            getReimbursements();
         }
         intSelect = newSelect;
     }
 }
+
+
+
+document.getElementById("amount").addEventListener("keyup", ()=> {
+    if(document.getElementById("amount").value.length > 0) {
+        document.getElementById('submit').disabled = false;
+    } else {
+        document.getElementById('submit').disabled = true;
+    }
+});
 
 document.getElementById('submit').addEventListener('click', ersSubmit);
 
@@ -82,8 +95,7 @@ async function ersSubmit() {
     if (c === true) {
         let ersAmountVal = document.getElementById("amount").value;
         let ersOptValue = document.getElementById("rb-type").value;
-        let ersDesVal = document.getElementById("description").value;
-        let amountHelper = document.getElementById("amountHelp");
+        let ersDesVal = document.getElementById("description").value;   
         if (isNaN(ersAmountVal)) {
             amountHelper.innerHTML = 'The enter amount is not a number';
             amountHelper.style.color = 'red';
@@ -94,7 +106,7 @@ async function ersSubmit() {
             let rib = {
                 amount: ersAmountVal,
                 description: ersDesVal,
-                author: user.userId,
+                author: user,
                 status: {
                     statusId: 200,
                     status: ""
@@ -105,26 +117,107 @@ async function ersSubmit() {
                 }
             };
 
-            let resp = await fetch(url + 'emp/submit', {
-                method: "POST",
-                body: JSON.stringify(rib),
-                credentials: 'include',
-            });
-
             select.value = "menu";
             intSelect = "menu";
             reqForm.hidden = true;
-            menu.innerHTML = "";
+            viewRibs.hidden = true;
+            menu.innerHTML = "Reimbursement submitting.....";
+            menu.style.color = "black";
             menu.hidden = false;
 
-            if (resp.status === 200) {
-                menu.innerHTML = "Your reimbursment has submitted successfully";
-                menu.style.color = "green";
-            } else {
-                let message = await resp.text();
-                menu.innerHTML = message + ". \nSubmit failed. Please try again";
+            try {
+                let resp = await fetch(url + 'emp/submit', {
+                    method: "POST",
+                    body: JSON.stringify(rib),
+                    credentials: 'include',
+                });  
+                if (resp.status === 200) {
+                    menu.innerHTML="";
+                    menu.innerHTML = "Your reimbursement has submitted successfully";
+                    menu.style.color = "green";
+                } else {
+                    let message = await resp.text();
+                    menu.innerHTML="";
+                    menu.innerHTML =  "Submitted reimbursement failed.\n" + message;
+                    nume.style.color = "red";
+                }
+            } catch (error) {
+                menu.innerHTML="";
+                menu.innerHTML = error.message + "\nSorry! Can't reach to server. Please login again";
                 menu.style.color = "red";
-            }
+                setTimeout(()=>{
+                    let c = confirm("Do you want to logout?");
+                    if(c==true) {
+                            location.href="user.html";
+                    } 
+                },2000);
+                
+            }   
         }
     }          
+}
+let msg = document.getElementById("view-reimbs-message");
+
+async function getReimbursements() {
+    msg.innerHTML = "";  
+    try {
+        let resp = await fetch(url+"emp/view-all", {credentials: 'include'});
+        if (resp.status === 200) {
+            
+            let data = await resp.json();
+            console.log(data);
+            document.getElementById("emp-table-view-reimbs").hidden=false;
+            document.getElementById("emp-table-view-reimbs-body").innerHTML="";
+
+            for(let rimb of data) {
+                let row = document.createElement("tr");
+
+                let id = document.createElement("td");
+                id.innerHTML = rimb.reimbId;
+                row.appendChild(id);
+
+                let submit = document.createElement("td");
+                let s = new Date(rimb.submitted);
+                submit.innerHTML = s.toDateString();
+                row.appendChild(submit);
+
+                let amount = document.createElement("td");
+                amount.innerHTML = "$" + rimb.amount;
+                row.appendChild(amount);
+
+                let type = document.createElement("td");
+                type.innerHTML = rimb.type.type;
+                row.appendChild(type);
+
+                let des = document.createElement("td");
+                des.innerHTML = rimb.description;
+                row.appendChild(des);
+
+                let status = document.createElement("td");
+                status.innerHTML = rimb.status.status;
+                row.appendChild(status);
+
+                let resolved = document.createElement("td");
+                resolved.innerHTML = rimb.resolved;
+                row.appendChild(resolved);
+
+                document.getElementById("emp-table-view-reimbs-body").appendChild(row);
+            }
+            
+        } else {
+            let message = await resp.text();
+            msg.innerHTML = message;
+            msg.style.color = "red";
+        }
+    } catch (error) {
+        msg.innerHTML = error.message + "\nSorry! Can't reach to server. Please login again";
+        msg.style.color = "red";
+        setTimeout(()=>{
+            let c = confirm("Do you want to logout?");
+            if(c==true) {
+                    location.href="user.html";
+            } 
+        },2000);       
+    } 
+     
 }

@@ -25,7 +25,7 @@ public class ReimbursmentStatusDAOImpl implements ReimbursmentStatusDAO {
 			String sql = ReimbursmentSatusDAOImplQueries.GET_STATUS_BY_ID;
 			PreparedStatement preparedStatement = connection.prepareStatement(sql);
 			preparedStatement.setInt(1, id);
-			ResultSet resultSet = preparedStatement.executeQuery(sql);
+			ResultSet resultSet = preparedStatement.executeQuery();
 			if(resultSet.next()) {
 				ersStatus = new ErsReimbursmentStatus(resultSet.getInt("reimb_status_id"), resultSet.getString("reimb_status"));
 			}

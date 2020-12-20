@@ -1,5 +1,7 @@
 package com.revature.ers.service;
 
+import java.util.List;
+
 import org.apache.log4j.Logger;
 
 import com.revature.ers.dao.EmployeeDAO;
@@ -13,8 +15,8 @@ public class EmployeeService {
 	private EmployeeDAO employeeDAO = new EmployeeDaoImpl();
 
 	public int submitErsReibursment(ErsReimbursment ersReimbursement) throws BusinessException {
-		if(ersReimbursement.getAuthor()<=0 ) {
-			throw new BusinessException ("Submition Failed! Invalid Author Id!");
+		if(ersReimbursement.getAuthor()==null ) {
+			throw new BusinessException ("Submition Failed! Null sender!");
 		} else if (ersReimbursement.getAmount()<0){
 			throw new BusinessException ("Invalid value for the amount= " + ersReimbursement.getAmount() + 
 					". The amount must not be negative number");
@@ -28,4 +30,14 @@ public class EmployeeService {
 			}
 		}
 	}
+
+	public List<ErsReimbursment> getRibByEmpId(int userId) throws BusinessException {
+		List<ErsReimbursment> listR = employeeDAO.getRibByEmpId(userId);
+		if(listR.size()==0) {
+			throw new BusinessException("No Reimbursment Record Found for This User");
+		}
+		return listR;
+	}
+
+	
 }

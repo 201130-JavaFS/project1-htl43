@@ -25,7 +25,7 @@ public class ReimbursmentTypeDAOImpl implements ReimbursmentTypeDAO {
 			String sql = ReimbursmentTypeDAOImplQueries.GET_TYPE_BY_ID;
 			PreparedStatement preparedStatement = connection.prepareStatement(sql);
 			preparedStatement.setInt(1, id);
-			ResultSet resultSet = preparedStatement.executeQuery(sql);
+			ResultSet resultSet = preparedStatement.executeQuery();
 			if(resultSet.next()) {
 				ersType = new ErsReimbursmentType(resultSet.getInt("reimb_type_id"), resultSet.getString("reimb_type"));
 			}

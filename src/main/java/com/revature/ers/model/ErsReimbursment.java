@@ -1,48 +1,45 @@
 package com.revature.ers.model;
 
-import java.sql.Date;
+import java.sql.Timestamp;
 import java.util.Arrays;
 
 public class ErsReimbursment {
 	private int reimbId;
 	private double amount;
-	private Date submitted;
-	private Date resolved;
+	private Timestamp submitted;
+	private Timestamp resolved;
 	private String description;
-	private byte[] receipt;
-	private int author;
-	private int resolver;
+	
+	private ErsUser author;
+	private ErsUser resolver;
 	ErsReimbursmentStatus status;
 	ErsReimbursmentType type;
 	
 	public ErsReimbursment() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 
-	public ErsReimbursment(int reimbId, double amount, Date submitted, Date resolved, String description,
-			byte[] receipt, int author, int resolver, ErsReimbursmentStatus status, ErsReimbursmentType type) {
+	public ErsReimbursment(int reimbId, double amount, Timestamp submitted, Timestamp resolved, String description,
+			ErsUser author, ErsUser resolver, ErsReimbursmentStatus status, ErsReimbursmentType type) {
 		super();
 		this.reimbId = reimbId;
 		this.amount = amount;
 		this.submitted = submitted;
 		this.resolved = resolved;
 		this.description = description;
-		this.receipt = receipt;
 		this.author = author;
 		this.resolver = resolver;
 		this.status = status;
 		this.type = type;
 	}
 
-	public ErsReimbursment(double amount, Date submitted, Date resolved, String description, byte[] receipt,
-			int author, int resolver, ErsReimbursmentStatus status, ErsReimbursmentType type) {
+	public ErsReimbursment(double amount, Timestamp submitted, Timestamp resolved, String description, ErsUser author,
+			ErsUser resolver, ErsReimbursmentStatus status, ErsReimbursmentType type) {
 		super();
 		this.amount = amount;
 		this.submitted = submitted;
 		this.resolved = resolved;
 		this.description = description;
-		this.receipt = receipt;
 		this.author = author;
 		this.resolver = resolver;
 		this.status = status;
@@ -65,19 +62,19 @@ public class ErsReimbursment {
 		this.amount = amount;
 	}
 
-	public Date getSubmitted() {
+	public Timestamp getSubmitted() {
 		return submitted;
 	}
 
-	public void setSubmitted(Date submitted) {
+	public void setSubmitted(Timestamp submitted) {
 		this.submitted = submitted;
 	}
 
-	public Date getResolved() {
+	public Timestamp getResolved() {
 		return resolved;
 	}
 
-	public void setResolved(Date resolved) {
+	public void setResolved(Timestamp resolved) {
 		this.resolved = resolved;
 	}
 
@@ -89,27 +86,19 @@ public class ErsReimbursment {
 		this.description = description;
 	}
 
-	public byte[] getReceipt() {
-		return receipt;
-	}
-
-	public void setReceipt(byte[] receipt) {
-		this.receipt = receipt;
-	}
-
-	public int getAuthor() {
+	public ErsUser getAuthor() {
 		return author;
 	}
 
-	public void setAuthor(int author) {
+	public void setAuthor(ErsUser author) {
 		this.author = author;
 	}
 
-	public int getResolver() {
+	public ErsUser getResolver() {
 		return resolver;
 	}
 
-	public void setResolver(int resolver) {
+	public void setResolver(ErsUser resolver) {
 		this.resolver = resolver;
 	}
 
@@ -136,12 +125,11 @@ public class ErsReimbursment {
 		long temp;
 		temp = Double.doubleToLongBits(amount);
 		result = prime * result + (int) (temp ^ (temp >>> 32));
-		result = prime * result + author;
+		result = prime * result + ((author == null) ? 0 : author.hashCode());
 		result = prime * result + ((description == null) ? 0 : description.hashCode());
-		result = prime * result + Arrays.hashCode(receipt);
 		result = prime * result + reimbId;
 		result = prime * result + ((resolved == null) ? 0 : resolved.hashCode());
-		result = prime * result + resolver;
+		result = prime * result + ((resolver == null) ? 0 : resolver.hashCode());
 		result = prime * result + ((status == null) ? 0 : status.hashCode());
 		result = prime * result + ((submitted == null) ? 0 : submitted.hashCode());
 		result = prime * result + ((type == null) ? 0 : type.hashCode());
@@ -159,14 +147,15 @@ public class ErsReimbursment {
 		ErsReimbursment other = (ErsReimbursment) obj;
 		if (Double.doubleToLongBits(amount) != Double.doubleToLongBits(other.amount))
 			return false;
-		if (author != other.author)
+		if (author == null) {
+			if (other.author != null)
+				return false;
+		} else if (!author.equals(other.author))
 			return false;
 		if (description == null) {
 			if (other.description != null)
 				return false;
 		} else if (!description.equals(other.description))
-			return false;
-		if (!Arrays.equals(receipt, other.receipt))
 			return false;
 		if (reimbId != other.reimbId)
 			return false;
@@ -175,7 +164,10 @@ public class ErsReimbursment {
 				return false;
 		} else if (!resolved.equals(other.resolved))
 			return false;
-		if (resolver != other.resolver)
+		if (resolver == null) {
+			if (other.resolver != null)
+				return false;
+		} else if (!resolver.equals(other.resolver))
 			return false;
 		if (status == null) {
 			if (other.status != null)
@@ -197,11 +189,11 @@ public class ErsReimbursment {
 
 	@Override
 	public String toString() {
-		return "ErsReimbursement [reimbId=" + reimbId + ", amount=" + amount + ", submitted=" + submitted
-				+ ", resolved=" + resolved + ", description=" + description + ", receipt=" + Arrays.toString(receipt)
-				+ ", author=" + author + ", resolver=" + resolver + ", status=" + status + ", type=" + type + "]";
+		return "ErsReimbursment [reimbId=" + reimbId + ", amount=" + amount + ", submitted=" + submitted + ", resolved="
+				+ resolved + ", description=" + description + ", author=" + author + ", resolver=" + resolver
+				+ ", status=" + status + ", type=" + type + "]";
 	}
-	
+
 	
 	
 }

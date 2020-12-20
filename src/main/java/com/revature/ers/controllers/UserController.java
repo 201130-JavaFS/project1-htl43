@@ -3,6 +3,7 @@ package com.revature.ers.controllers;
 import java.io.BufferedReader;
 import java.io.IOException;
 
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -23,7 +24,7 @@ public class UserController {
 	private ObjectMapper om = new ObjectMapper();
 	private UserService us = new UserService();
 
-	public void login(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+	public void login(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		if(req.getMethod().equals("POST")) {
 			
 			BufferedReader reader = req.getReader();
@@ -45,7 +46,7 @@ public class UserController {
 				resp.getWriter().print(json);
 				resp.setStatus(200);		
 				HttpSession ses = req.getSession();	
-				ses.setAttribute("user", lDTO);
+				ses.setAttribute("user", ersUser);
 				ses.setAttribute("loggedin", true);
 				log.info("<Login Succesfull!>");
 				log.info(ersUser.toString());
@@ -65,13 +66,14 @@ public class UserController {
 				ses.invalidate();
 			}
 			resp.setStatus(400);
+			resp.getWriter().print("Bad Requested Using Http Method");
 			log.warn("<Login Failed!>");
-			log.warn("Bad Requested");
+			log.warn("Bad Requested Using Http Method");
 		}
 		
 	}
 
-	public void create(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+	public void create(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		if(req.getMethod().equals("POST")) {		
 			BufferedReader reader = req.getReader();
 			StringBuilder sb = new StringBuilder();
@@ -107,8 +109,9 @@ public class UserController {
 				ses.invalidate();
 			}
 			resp.setStatus(400);
+			resp.getWriter().print("Bad Requested Using Http Method");
 			log.warn("<Created Account Failed!>");
-			log.warn("Bad Requested");
+			log.warn("Bad Requested Using Http Method");	
 		}
 	}
 
