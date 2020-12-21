@@ -23,7 +23,7 @@ public class ManagerService {
 		if(rib.getReimbId()<=0) {
 			throw new BusinessException("Invalid of Sending Reimbursement Id");
 		} else {
-			int c = managerDAO.UpdateRibStatusById(rib.getStatus().getStatusId(), rib.getReimbId());
+			int c = managerDAO.UpdateRibStatusById(rib.getStatus().getStatusId(), rib.getReimbId(), rib.getResolver().getUserId());
 			if(c<=0) {
 				throw new BusinessException("Record not found. Unable to update status for the reimbursement");
 			}

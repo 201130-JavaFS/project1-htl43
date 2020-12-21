@@ -58,20 +58,22 @@
    <div class="container" id="view-reimbs" hidden>
     <div class="row" id="pending-change" hidden>
       <div class="col-sm-1">
-        <p >ReimbID</p>
+        <p>ReimbID</p>
         <select class="bg-light text-dark " id="reimbId-select">
         </select>
       </div>
       <div class="col-sm-2">
-        <p >Status</p>
+        <p>Status</p>
         <select class="bg-light text-dark" id="reimbStatus-select">
-          <option value="PENDING">PENDING</option>
+          <option class="bg-light text-dark" value="100">PENDING</option>
+          <option class="bg-success text-white" value="101">APPROVE</option>
+          <option class="bg-danger text-white" value="102">DENY</option>
         </select>
       </div>
       <div class="col-sm-1">
-        <p >Confirm</p>
-        <button type="button" class="btn btn-danger btn-sm" id="reimbs-change-submit" >
-         Submit
+        <p>Submit</p>
+        <button type="button" class="btn btn-primary btn-sm" id="reimbs-change-submit" disabled>
+         Confirm
       </button>
       </div>    
     </div>

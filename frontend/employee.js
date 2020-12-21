@@ -5,7 +5,6 @@ var user;
 function loadData() {
     let data = localStorage.getItem("userData");
     user = JSON.parse(data);
-    console.log(user);
 
     if(user) {
         let row = document.createElement("tr");
@@ -108,7 +107,7 @@ async function ersSubmit() {
                 description: ersDesVal,
                 author: user,
                 status: {
-                    statusId: 200,
+                    statusId: 100,
                     status: ""
                 },
                 type: {
@@ -165,7 +164,6 @@ async function getReimbursements() {
         if (resp.status === 200) {
             
             let data = await resp.json();
-            console.log(data);
             document.getElementById("emp-table-view-reimbs").hidden=false;
             document.getElementById("emp-table-view-reimbs-body").innerHTML="";
 
@@ -195,10 +193,19 @@ async function getReimbursements() {
 
                 let status = document.createElement("td");
                 status.innerHTML = rimb.status.status;
+                if(rimb.status.statusId==101) {
+                    status.setAttribute('class', 'bg-success text-white');
+                }
+                else if(rimb.status.statusId==102){
+                    status.setAttribute('class', 'bg-danger text-white');
+                } else {
+                    status.setAttribute('class', 'bg-light text-dark');
+                }
                 row.appendChild(status);
 
                 let resolved = document.createElement("td");
-                resolved.innerHTML = rimb.resolved;
+                let r = new Date(rimb.resolved);
+                resolved.innerHTML = r.toDateString();
                 row.appendChild(resolved);
 
                 document.getElementById("emp-table-view-reimbs-body").appendChild(row);

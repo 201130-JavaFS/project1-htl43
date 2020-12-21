@@ -9,5 +9,5 @@ public interface ManagerDAO {
 
 	public List<ErsReimbursment> getAllRibs() throws BusinessException;
 
-	public int UpdateRibStatusById(int statusId, int ribId) throws BusinessException;
+	public int UpdateRibStatusById(int statusId, int ribId, int resolverId) throws BusinessException;
 }

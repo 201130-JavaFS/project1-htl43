@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -52,7 +53,7 @@ public class ManagerDAOImpl implements ManagerDAO {
 				if(resultSet.getInt("reimb_resolver")!=0) {
 					ErsUser resolver = new ErsUser();
 					resolver.setUserId(resultSet.getInt("reimb_resolver"));
-					reimb.setAuthor(resolver);;
+					reimb.setResolver(resolver);
 				}
 				if(resultSet.getInt("reimb_type_id")!=0) {
 					ErsReimbursmentType reimbType = rbsType.getReimbursmentTypeById(resultSet.getInt("reimb_type_id"));
@@ -73,13 +74,17 @@ public class ManagerDAOImpl implements ManagerDAO {
 	}
 
 	@Override
-	public int UpdateRibStatusById(int statusId, int ribId) throws BusinessException {
+	public int UpdateRibStatusById(int statusId, int ribId, int resolverId) throws BusinessException {
 		int c = 0;
-		try (Connection connection = PostresSqlConnection.getConnection()) {	
-			String sql = ManagerDAOImplQueries.UPDATE_REIBS_STATUS_BY_ID;
+		try (Connection connection = PostresSqlConnection.getConnection()) {
+			long timeNow = System.currentTimeMillis();
+			Timestamp curreTimestamp = new Timestamp(timeNow);
+			String sql = ManagerDAOImplQueries.UPDATE_REIBS_BY_ID;
 			PreparedStatement preparedStatement = connection.prepareStatement(sql);
 			preparedStatement.setInt(1, statusId);
-			preparedStatement.setInt(2, ribId);
+			preparedStatement.setInt(2, resolverId);
+			preparedStatement.setTimestamp(3, curreTimestamp);
+			preparedStatement.setInt(4, ribId);		
 			c = preparedStatement.executeUpdate();	
 		} catch (ClassNotFoundException | SQLException e) {
 			log.warn(e.getMessage());

@@ -5,7 +5,6 @@ var user;
 function loadData() {
     let data = localStorage.getItem("userData");
     user = JSON.parse(data);
-    console.log(user);
 
     if(user) {
         let row = document.createElement("tr");
@@ -99,8 +98,16 @@ function viewAllRibs(dataSelect) {
 
         let status = document.createElement("td");
         status.innerHTML = rimb.status.status;
+        if(rimb.status.statusId==101) {
+            status.setAttribute('class', 'bg-success text-white');
+        }
+        else if(rimb.status.statusId==102){
+            status.setAttribute('class', 'bg-danger text-white');
+        } else {
+            status.setAttribute('class', 'bg-light text-dark');
+        }
         row.appendChild(status);
-
+        
         
         let resolverId = document.createElement("td");
         if(rimb.resolver!=null) {
@@ -109,7 +116,8 @@ function viewAllRibs(dataSelect) {
         row.appendChild(resolverId);
 
         let resolved = document.createElement("td");
-        resolved.innerHTML = rimb.resolved;
+        let r = new Date(rimb.resolved);
+        resolved.innerHTML = r.toDateString();
         row.appendChild(resolved);
     
         viewTableRibs.appendChild(row);
@@ -120,14 +128,12 @@ function viewAllRibs(dataSelect) {
 async function getAllRibs(newSelect, displayRibs) {
     msg.innerHTML = "";
     let pc = document.getElementById('pending-change');
-    let reimbIdSelect = document.getElementById('reimbId-select');
-    let reimbStatusSelect = document.getElementById('reimbStatus-select'); 
+    let reimbIdSelect = document.getElementById('reimbId-select'); 
     try {
         let resp = await fetch(url+"man/view-all", {credentials: 'include'});
         if (resp.status === 200) {
                 viewTableRibs.hidden = false;
                 let data = await resp.json();
-                console.log(data);
                 document.getElementById("man-table-view-reimbs").hidden=false;
                 document.getElementById("man-table-view-reimbs-body").innerHTML="";
                 let dataSelect = [];
@@ -143,6 +149,7 @@ async function getAllRibs(newSelect, displayRibs) {
                     }
                 } else {
                     pc.hidden = false;
+                    reimbIdSelect.innerHTML = "";
                     for(let rimb of data) {
                         if(rimb.status.statusId==100) {
                             let reimbIdOpt = document.createElement('option');
@@ -152,16 +159,6 @@ async function getAllRibs(newSelect, displayRibs) {
                             dataSelect.push(rimb);
                         }
                     }
-                    let approveStatusOpt = document.createElement('option');
-                    approveStatusOpt.value = 101;
-                    approveStatusOpt.innerHTML =  "APPROVED";
-                    approveStatusOpt.setAttribute('class', 'bg-success text-white');
-                    reimbStatusSelect.appendChild( approveStatusOpt);
-                    let denyStatusOpt = document.createElement('option');
-                    denyStatusOpt.value = 102;
-                    denyStatusOpt.innerHTML =  "DENINED";
-                    denyStatusOpt.setAttribute('class', 'bg-danger text-white');
-                    reimbStatusSelect.appendChild(denyStatusOpt);
                 }
                 displayRibs(dataSelect);
                 
@@ -173,7 +170,7 @@ async function getAllRibs(newSelect, displayRibs) {
         }
     } catch (error) {
         viewTableRibs.hidden =  true;
-        msg.innerHTML = error.message + "<br/>Sorry! Can't reach to server. Please login again";
+        msg.innerHTML = error.message + "<br/>Sorry! Can't reach to server. Please try to login again";
         msg.style.color = "red";
         setTimeout(()=>{
             let c = confirm("Do you want to logout?");
@@ -182,4 +179,64 @@ async function getAllRibs(newSelect, displayRibs) {
             } 
         },2000); 
     }
+}
+let ribId = document.getElementById('reimbId-select');
+let ribStatus = document.getElementById('reimbStatus-select');
+let submitButton = document.getElementById('reimbs-change-submit');
+
+ribStatus.addEventListener("change", ()=> {
+    submitButton.disabled = false;
+    if(ribStatus.value==101) {
+        ribStatus.className = 'bg-success text-white';
+    } else if (ribStatus.value==102) {
+        ribStatus.className = 'bg-danger text-white';
+    } else {
+        ribStatus.className = 'bg-light text-dark';
+        submitButton.disabled = true;
+    }
+});
+
+
+submitButton.addEventListener('click', submitRibStatusChange);
+
+async function submitRibStatusChange() {   
+    if(ribStatus.value!=100) {
+        msg.innerHTML="";
+        let rib = {
+            reimbId : ribId.value,
+            status : {
+                statusId: ribStatus.value
+            },
+            resolver : {
+                userId : user.userId
+            }
+        }
+        try {
+            let resp = await fetch(url + 'man/change-status', {
+                method: "POST",
+                body: JSON.stringify(rib),
+                credentials: 'include',
+            });  
+            if (resp.status === 200) {               
+                getAllRibs(intSelect, viewAllRibs);
+                msg.innerHTML = "Updated Reimbursement Status successfully!";
+                msg.style.color = "green";
+            } else {
+                let message = await resp.text();
+                msg.innerHTML =  "Submitted reimbursement failed.\n" + message;
+                msg.style.color = "red";
+            }
+        } catch (error) {   
+            msg.innerHTML = error.message + "\nSorry! Can't reach to server. Please try to login again";
+            msg.style.color = "red";
+            setTimeout(()=>{
+                let c = confirm("Do you want to logout?");
+                if(c==true) {
+                        location.href="user.html";
+                } 
+            },2000);
+            
+        }
+    }
+    
 }
