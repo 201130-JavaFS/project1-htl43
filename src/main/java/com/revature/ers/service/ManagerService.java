@@ -19,7 +19,7 @@ public class ManagerService {
 		return listR;
 	}
 
-	public void changeRibStatusById(ErsReimbursment rib) throws BusinessException {
+	public int changeRibStatusById(ErsReimbursment rib) throws BusinessException {
 		if(rib.getReimbId()<=0) {
 			throw new BusinessException("Invalid of Sending Reimbursement Id");
 		} else {
@@ -27,6 +27,7 @@ public class ManagerService {
 			if(c<=0) {
 				throw new BusinessException("Record not found. Unable to update status for the reimbursement");
 			}
+			return c;
 		}
 		
 	}

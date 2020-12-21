@@ -12,7 +12,6 @@ public class ErsUser {
 	
 	public ErsUser() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 
 	public ErsUser(int userId, String username, String password, String firstname, String lastname, String email,

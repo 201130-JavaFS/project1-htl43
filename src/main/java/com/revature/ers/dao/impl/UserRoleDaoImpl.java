@@ -19,7 +19,6 @@ public class UserRoleDaoImpl implements UserRoleDAO {
 
 	@Override
 	public boolean createRole(String roleName) throws BusinessException {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
@@ -46,7 +45,6 @@ public class UserRoleDaoImpl implements UserRoleDAO {
 
 	@Override
 	public List<ErsUserRole> getAllRole() throws BusinessException {
-		// TODO Auto-generated method stub
 		return null;
 	}
 

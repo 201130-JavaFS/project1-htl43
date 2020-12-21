@@ -9,16 +9,26 @@ public class PostresSqlConnection {
 	private static Connection connection;
 	
 	private PostresSqlConnection() {
-		// TODO Auto-generated constructor stub
 	}
 	
+	//Local database connectivity
+//	public static Connection getConnection() throws ClassNotFoundException, SQLException {
+//		Class.forName(DbUtilProps.DRIVER);
+//		String url=DbUtilProps.URL;			
+//		String username=System.getenv("postgresUserName");
+//		String password=System.getenv("postgresPassword");
+//		connection=DriverManager.getConnection(url, username, password);
+//		return connection;
+//	}
+	
+	//AWS-RES connectivity
 	public static Connection getConnection() throws ClassNotFoundException, SQLException {
 		Class.forName(DbUtilProps.DRIVER);
 		String url=DbUtilProps.URL;			
-		String username=System.getenv("postgresUserName");
-		String password=System.getenv("postgresPassword");
+		String username="postgres";
+		String password="baohieu1984";
 		connection=DriverManager.getConnection(url, username, password);
 		return connection;
 	}
+	
 }
-//Single Ton - Single TON Java CLass.
