@@ -7,6 +7,7 @@ import com.revature.ers.model.ErsReimbursment;
 
 public interface ManagerDAO {
 
-	List<ErsReimbursment> getAllRibs() throws BusinessException;
+	public List<ErsReimbursment> getAllRibs() throws BusinessException;
 
+	public int UpdateRibStatusById(int statusId, int ribId) throws BusinessException;
 }

@@ -6,10 +6,12 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
 
 import com.revature.ers.controllers.ManagerController;
+import com.revature.ers.model.ErsUser;
 
 public class ManagerServlet extends HttpServlet {
 	
@@ -26,10 +28,24 @@ public class ManagerServlet extends HttpServlet {
 			resp.setStatus(401);
 			resp.getWriter().print("Unauthorized User");
 		} else {
-			switch (URI) {
-			case "view-all":
-				mc.viewAllReimbursement(req, resp);				
-				break;
+			HttpSession ses = req.getSession();	
+			ErsUser ersUser = (ErsUser)ses.getAttribute("user");
+			if(ersUser.getRole().getUserRoleId()!=2) {
+				resp.setStatus(403);
+				resp.getWriter().print("No Permission for the resource");
+				log.warn("<Request All Reimbursment Failed!>");
+				log.warn("No Permission for the resource");
+			} else {	
+				switch (URI) {			
+				case "view-all":
+					mc.viewAllReimbursement(req, resp);				
+					break;
+				
+				case "change-status":
+					mc.changeRibStatusById(req, resp);
+					break;
+					
+				}
 			}
 		}
 	}

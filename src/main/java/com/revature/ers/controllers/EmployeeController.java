@@ -39,7 +39,7 @@ public class EmployeeController {
 			
 			String body = new String(sb);
 			ErsReimbursment ersReimbursement = om.readValue(body, ErsReimbursment.class);
-			System.out.println("Rebursment get=" + ersReimbursement);
+	
 			try {
 				es.submitErsReibursment(ersReimbursement);		
 				resp.setStatus(200);

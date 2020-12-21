@@ -155,11 +155,12 @@ async function getAllRibs(newSelect, displayRibs) {
                     let approveStatusOpt = document.createElement('option');
                     approveStatusOpt.value = 101;
                     approveStatusOpt.innerHTML =  "APPROVED";
+                    approveStatusOpt.setAttribute('class', 'bg-success text-white');
                     reimbStatusSelect.appendChild( approveStatusOpt);
                     let denyStatusOpt = document.createElement('option');
                     denyStatusOpt.value = 102;
                     denyStatusOpt.innerHTML =  "DENINED";
-                    denyStatusOpt.style.backgroundColor = "red";
+                    denyStatusOpt.setAttribute('class', 'bg-danger text-white');
                     reimbStatusSelect.appendChild(denyStatusOpt);
                 }
                 displayRibs(dataSelect);

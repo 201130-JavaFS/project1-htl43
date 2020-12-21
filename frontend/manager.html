@@ -57,18 +57,25 @@
    <!-- Manager View Reimbursement Display Div -->
    <div class="container" id="view-reimbs" hidden>
     <div class="row" id="pending-change" hidden>
-      <div class="col-sm-2">
-        <p>Reimb-ID</p>
-        <select class="bg-light text-dark" id="reimbId-select">
+      <div class="col-sm-1">
+        <p >ReimbID</p>
+        <select class="bg-light text-dark " id="reimbId-select">
         </select>
       </div>
       <div class="col-sm-2">
-        <p>Status</p>
-        <select class="bg-success text-white" id="reimbStatus-select">
+        <p >Status</p>
+        <select class="bg-light text-dark" id="reimbStatus-select">
+          <option value="PENDING">PENDING</option>
         </select>
       </div>
-      
+      <div class="col-sm-1">
+        <p >Confirm</p>
+        <button type="button" class="btn btn-danger btn-sm" id="reimbs-change-submit" >
+         Submit
+      </button>
+      </div>    
     </div>
+
     <p id="view-reimbs-message"></p>
     <div class="row table-row">
       <table class="table table-hover table-bordered col-sm-12" id="man-table-view-reimbs" hidden>

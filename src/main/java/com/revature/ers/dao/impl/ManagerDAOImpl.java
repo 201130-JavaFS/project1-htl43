@@ -72,4 +72,21 @@ public class ManagerDAOImpl implements ManagerDAO {
 		return listR;
 	}
 
+	@Override
+	public int UpdateRibStatusById(int statusId, int ribId) throws BusinessException {
+		int c = 0;
+		try (Connection connection = PostresSqlConnection.getConnection()) {	
+			String sql = ManagerDAOImplQueries.UPDATE_REIBS_STATUS_BY_ID;
+			PreparedStatement preparedStatement = connection.prepareStatement(sql);
+			preparedStatement.setInt(1, statusId);
+			preparedStatement.setInt(2, ribId);
+			c = preparedStatement.executeUpdate();	
+		} catch (ClassNotFoundException | SQLException e) {
+			log.warn(e.getMessage());
+			throw new BusinessException("Internal error occured. Please contact customer "
+					+ "service for more imformation");
+		}	
+		return c;
+	}
+
 }
