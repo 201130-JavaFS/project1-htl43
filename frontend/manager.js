@@ -68,61 +68,68 @@ let msg = document.getElementById("view-reimbs-message");
 let viewTableRibs = document.getElementById("man-table-view-reimbs-body");
 
 function viewAllRibs(dataSelect) { 
-    for(let rimb of dataSelect) {
-        let row = document.createElement("tr");
+    console.log(dataSelect);
+    if(dataSelect.length) {
+        for(let rimb of dataSelect) {
+            let row = document.createElement("tr");
 
-        let id = document.createElement("td");
-        id.innerHTML = rimb.reimbId;
-        row.appendChild(id);
+            let id = document.createElement("td");
+            id.innerHTML = rimb.reimbId;
+            row.appendChild(id);
 
-        let submit = document.createElement("td");
-        let s = new Date(rimb.submitted);
-        submit.innerHTML = s.toDateString();
-        row.appendChild(submit);
+            let submit = document.createElement("td");
+            let s = new Date(rimb.submitted);
+            submit.innerHTML = s.toDateString();
+            row.appendChild(submit);
 
-        let amount = document.createElement("td");
-        amount.innerHTML = "$" + rimb.amount;
-        row.appendChild(amount);
+            let amount = document.createElement("td");
+            amount.innerHTML = "$" + rimb.amount;
+            row.appendChild(amount);
 
-        let authorId = document.createElement("td");
-        authorId.innerHTML = rimb.author.userId;
-        row.appendChild(authorId);
+            let authorId = document.createElement("td");
+            authorId.innerHTML = rimb.author.userId;
+            row.appendChild(authorId);
 
-        let type = document.createElement("td");
-        type.innerHTML = rimb.type.type;
-        row.appendChild(type);
+            let type = document.createElement("td");
+            type.innerHTML = rimb.type.type;
+            row.appendChild(type);
 
-        let des = document.createElement("td");
-        des.innerHTML = rimb.description;
-        row.appendChild(des);
+            let des = document.createElement("td");
+            des.innerHTML = rimb.description;
+            row.appendChild(des);
 
-        let status = document.createElement("td");
-        status.innerHTML = rimb.status.status;
-        if(rimb.status.statusId==101) {
-            status.setAttribute('class', 'bg-success text-white');
-        }
-        else if(rimb.status.statusId==102){
-            status.setAttribute('class', 'bg-danger text-white');
-        } else {
-            status.setAttribute('class', 'bg-light text-dark');
-        }
-        row.appendChild(status);
+            let status = document.createElement("td");
+            status.innerHTML = rimb.status.status;
+            if(rimb.status.statusId==101) {
+                status.setAttribute('class', 'bg-success text-white');
+            }
+            else if(rimb.status.statusId==102){
+                status.setAttribute('class', 'bg-danger text-white');
+            } else {
+                status.setAttribute('class', 'bg-light text-dark');
+            }
+            row.appendChild(status);
+            
+            
+            let resolverId = document.createElement("td");
+            if(rimb.resolver!=null) {
+                resolverId.innerHTML = rimb.resolver.userId;
+            }  
+            row.appendChild(resolverId);
+
+            let resolved = document.createElement("td");
+            let r = new Date(rimb.resolved);
+            resolved.innerHTML = r.toDateString();
+            row.appendChild(resolved);
         
-        
-        let resolverId = document.createElement("td");
-        if(rimb.resolver!=null) {
-            resolverId.innerHTML = rimb.resolver.userId;
-        }  
-        row.appendChild(resolverId);
-
-        let resolved = document.createElement("td");
-        let r = new Date(rimb.resolved);
-        resolved.innerHTML = r.toDateString();
-        row.appendChild(resolved);
-    
-        viewTableRibs.appendChild(row);
-    }       
-      
+            viewTableRibs.appendChild(row);
+        }       
+    } else {
+        console.log("data is null");
+        msg.innerHTML = "No Reibursement Found";
+        msg.style.color = "blue";
+        document.getElementById("man-table-view-reimbs").hidden = true;
+    }
 }
 
 async function getAllRibs(newSelect, displayRibs) {
